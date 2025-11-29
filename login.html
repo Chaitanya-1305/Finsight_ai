@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - FinSight AI</title>
+  <link rel="stylesheet" href="assets/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    :root {
+      --finsight-primary: #00c851;
+      --finsight-secondary: #1a1a2e;
+      --finsight-accent-gold: #ffd700;
+      --finsight-text-primary: #ffffff;
+      --finsight-gradient: linear-gradient(135deg, #00c851 0%, #00a842 100%);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:linear-gradient(135deg,#0f0f1e 0%,#1a1a2e 100%);
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .auth-container {
+      background:rgba(10,10,25,0.96);
+      border-radius:24px; padding:40px 48px; width:100%; max-width:460px;
+      box-shadow:0 24px 80px rgba(0,0,0,0.6); border:1px solid rgba(0,200,81,0.25); position:relative;
+    }
+    .logo { text-align:center; margin-bottom:28px; }
+    .logo-icon-wrapper {
+      width:40px; height:40px; border-radius:12px; border:1px solid rgba(0,200,81,0.5);
+      display:flex; align-items:center; justify-content:center; margin:0 auto 18px;
+      background:radial-gradient(circle at 30% 0,rgba(0,200,81,0.35),transparent 60%);
+    }
+    .logo i { font-size:22px; color:var(--finsight-primary); }
+    .logo h1 { color:#fff; font-size:26px; font-weight:600; letter-spacing:0.03em; margin-bottom:6px; }
+    .logo p { color:rgba(255,255,255,0.6); font-size:13px; }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; color:rgba(255,255,255,0.72); margin-bottom:6px; font-size:13px; }
+    .form-control {
+      width:100%; padding:11px 14px; background:rgba(9,9,24,0.9);
+      border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:#fff;
+      font-size:14px; transition:all 0.2s ease;
+    }
+    .form-control::placeholder { color:rgba(255,255,255,0.35); }
+    .form-control:focus {
+      outline:none; border-color:var(--finsight-primary);
+      box-shadow:0 0 0 1px rgba(0,200,81,0.4); background:rgba(9,9,24,0.96);
+    }
+    .password-toggle { position:relative; }
+    .password-toggle i {
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      color:rgba(255,255,255,0.45); cursor:pointer; font-size:13px;
+    }
+    .btn {
+      width:100%; padding:13px; border-radius:999px; border:none;
+      background:var(--finsight-gradient); color:#fff; font-size:15px; font-weight:600;
+      cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      transition:transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow:0 14px 35px rgba(0,200,81,0.35); margin-top:6px;
+    }
+    .btn:hover { transform:translateY(-1px); box-shadow:0 18px 45px rgba(0,200,81,0.45); }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; box-shadow:none; }
+    .form-footer {
+      margin-top:16px; display:flex; justify-content:space-between;
+      align-items:center; font-size:12px; color:rgba(255,255,255,0.55);
+    }
+    .form-footer a { color:var(--finsight-primary); text-decoration:none; }
+    .links { text-align:center; margin-top:20px; font-size:13px; color:rgba(255,255,255,0.6); }
+    .links a { color:var(--finsight-primary); text-decoration:none; font-weight:500; }
+    .error-message,.success-message {
+      border-radius:8px; padding:10px 12px; font-size:13px; margin-bottom:14px; display:none;
+    }
+    .error-message { background:rgba(255,68,68,0.06); border:1px solid rgba(255,68,68,0.35); color:#ff6b6b; }
+    .success-message { background:rgba(0,200,81,0.06); border:1px solid rgba(0,200,81,0.35); color:var(--finsight-primary); }
+    @media (max-width:480px){ .auth-container{ padding:28px 20px; } }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="logo">
+      <div class="logo-icon-wrapper">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <h1>FinSight AI</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="form-control"
+               placeholder="your.email@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-toggle">
+          <input type="password" id="password" class="form-control"
+                 placeholder="Enter your password" required />
+          <i class="fas fa-eye" id="togglePassword"></i>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <span></span>
+        <a href="admin-login.html">Admin login</a>
+      </div>
+
+      <button type="submit" class="btn" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+    </form>
+
+    <div class="links">
+      <p>Don't have an account? <a href="register.html">Create one</a></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAi0jDVcNjzgTuRTInF1vlIUrOUX3DUKjQ",
+      authDomain: "faif-54aa9.firebaseapp.com",
+      projectId: "faif-54aa9",
+      storageBucket: "faif-54aa9.firebasestorage.app",
+      messagingSenderId: "624594089302",
+      appId: "1:624594089302:web:6fb75ad5d5a59c91b9d2f7",
+      measurementId: "G-WDZ8QRNFG8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    document.getElementById('togglePassword').addEventListener('click', () => {
+      const password = document.getElementById('password');
+      const icon = document.getElementById('togglePassword');
+      if (password.type === 'password') {
+        password.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        password.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+
+      errorMessage.style.display = 'none';
+      successMessage.style.display = 'none';
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        const user = cred.user;
+
+        const userSnap = await getDoc(doc(db, 'users', user.uid));
+        let role = 'user';
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          role = data.role || 'user';
+        }
+
+        sessionStorage.setItem('user', JSON.stringify({
+          uid: user.uid, email: user.email, role
+        }));
+
+        successMessage.textContent = 'Login successful! Redirecting...';
+        successMessage.style.display = 'block';
+
+        setTimeout(() => {
+          if (role === 'admin') window.location.href = 'admin-dashboard.html';
+          else window.location.href = 'index.html';
+        }, 1000);
+      } catch (err) {
+        console.error('Login error:', err);
+        const code = err.code || '';
+        let msg = 'Login failed. Please try again.';
+        if (code === 'auth/user-not-found') msg = 'No account found with this email.';
+        else if (code === 'auth/wrong-password') msg = 'Incorrect password. Please try again.';
+        else if (code === 'auth/invalid-email') msg = 'Invalid email address.';
+        else if (code === 'auth/user-disabled') msg = 'This account has been disabled.';
+        errorMessage.textContent = msg;
+        errorMessage.style.display = 'block';
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+      }
+    });
+  </script>
+</body>
+</html>

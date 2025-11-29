@@ -1,0 +1,727 @@
+/* ============================================
+   ADMIN DASHBOARD STYLES - COMPLETE
+   ============================================ */
+
+:root {
+    --admin-primary: #ffd700;
+    --admin-primary-dark: #ffb700;
+    --admin-bg-dark: #0f0f1e;
+    --admin-bg-light: #1a1a2e;
+    --admin-surface: rgba(26, 26, 46, 0.95);
+    --admin-border: rgba(255, 215, 0, 0.2);
+    --admin-text-primary: #ffffff;
+    --admin-text-secondary: rgba(255, 255, 255, 0.6);
+    --success-color: #00c851;
+    --error-color: #ff4444;
+    --warning-color: #ffc107;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+    color: var(--admin-text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================
+   NAVIGATION STYLES
+   ============================================ */
+
+.admin-nav {
+    background: linear-gradient(135deg, var(--admin-bg-light) 0%, var(--admin-bg-dark) 100%);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--admin-primary);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-brand i {
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+    }
+}
+
+.nav-brand .brand-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--admin-text-primary);
+}
+
+.admin-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+    color: var(--admin-bg-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 12px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-link {
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+    color: var(--admin-primary);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.nav-link.active {
+    color: var(--admin-primary);
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+}
+
+#logoutBtn {
+    color: var(--error-color);
+}
+
+#logoutBtn:hover {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff6b6b;
+}
+
+/* ============================================
+   DASHBOARD CONTAINER
+   ============================================ */
+
+.dashboard-container {
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    margin-bottom: 50px;
+    animation: slideIn 0.6s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-header h1 {
+    color: var(--admin-text-primary);
+    font-size: 36px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.dashboard-header p {
+    color: var(--admin-text-secondary);
+    font-size: 16px;
+}
+
+/* ============================================
+   METRICS GRID
+   ============================================ */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 50px;
+}
+
+.metric-card {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+}
+
+.metric-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.metric-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(255, 215, 0, 0.2);
+    border-color: var(--admin-primary);
+}
+
+.metric-card h3 {
+    color: var(--admin-text-secondary);
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.metric-card .value {
+    color: var(--admin-primary);
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: -1px;
+}
+
+.metric-card .change {
+    font-size: 14px;
+    color: var(--success-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.metric-card .change i {
+    font-size: 12px;
+}
+
+/* ============================================
+   DATA TABLES
+   ============================================ */
+
+.data-table {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.7s ease;
+}
+
+.data-table h2 {
+    color: var(--admin-text-primary);
+    margin-bottom: 28px;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+}
+
+.data-table h2 i {
+    color: var(--admin-primary);
+    font-size: 28px;
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+thead {
+    background: rgba(255, 215, 0, 0.08);
+}
+
+th {
+    padding: 16px 20px;
+    text-align: left;
+    color: var(--admin-primary);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+td {
+    padding: 18px 20px;
+    color: var(--admin-text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 15px;
+}
+
+tbody tr {
+    transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+    background: rgba(255, 215, 0, 0.06);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.status-active {
+    background: rgba(0, 200, 81, 0.15);
+    color: var(--success-color);
+    border: 1px solid rgba(0, 200, 81, 0.3);
+}
+
+.status-pending {
+    background: rgba(255, 193, 7, 0.15);
+    color: var(--warning-color);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-inactive {
+    background: rgba(255, 68, 68, 0.15);
+    color: var(--error-color);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+
+.action-btn {
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.action-btn:last-child {
+    margin-right: 0;
+}
+
+.btn-view {
+    background: rgba(0, 200, 81, 0.12);
+    color: var(--success-color);
+    border: 1px solid rgba(0, 200, 81, 0.3);
+}
+
+.btn-view:hover {
+    background: rgba(0, 200, 81, 0.24);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 200, 81, 0.2);
+}
+
+.btn-delete {
+    background: rgba(255, 68, 68, 0.12);
+    color: var(--error-color);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.btn-delete:hover {
+    background: rgba(255, 68, 68, 0.24);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.2);
+}
+
+.btn-edit {
+    background: rgba(255, 215, 0, 0.12);
+    color: var(--admin-primary);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.btn-edit:hover {
+    background: rgba(255, 215, 0, 0.24);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+/* ============================================
+   CHART CONTAINER
+   ============================================ */
+
+.chart-container {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container h2 {
+    color: var(--admin-text-primary);
+    margin-bottom: 28px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.chart-placeholder {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--admin-text-secondary);
+    border: 2px dashed rgba(255, 215, 0, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 215, 0, 0.02);
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.chart-placeholder i {
+    font-size: 64px;
+    color: rgba(255, 215, 0, 0.2);
+    margin-bottom: 16px;
+}
+
+.chart-placeholder p {
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.chart-placeholder p:first-of-type {
+    color: var(--admin-text-primary);
+    font-weight: 600;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.section-divider {
+    margin: 60px 0;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--admin-text-secondary);
+}
+
+.no-data i {
+    font-size: 64px;
+    color: rgba(255, 215, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.no-data h3 {
+    color: var(--admin-text-primary);
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .dashboard-container {
+        padding: 30px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .data-table {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .nav-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 28px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .metric-card {
+        padding: 20px;
+    }
+
+    .metric-card .value {
+        font-size: 32px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 12px 10px;
+    }
+
+    .action-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        margin-right: 4px;
+    }
+
+    .data-table {
+        padding: 16px;
+        margin-bottom: 30px;
+    }
+
+    .chart-container {
+        padding: 16px;
+    }
+
+    .chart-placeholder {
+        height: 250px;
+        padding: 30px 15px;
+    }
+
+    .chart-placeholder i {
+        font-size: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-nav {
+        padding: 12px 15px;
+    }
+
+    .nav-brand .brand-text {
+        font-size: 18px;
+    }
+
+    .nav-menu {
+        gap: 10px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 6px 8px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-header p {
+        font-size: 14px;
+    }
+
+    .dashboard-grid {
+        gap: 12px;
+    }
+
+    .metric-card {
+        padding: 16px;
+    }
+
+    .metric-card .value {
+        font-size: 28px;
+    }
+
+    .data-table {
+        padding: 12px;
+        margin-bottom: 24px;
+        border-radius: 12px;
+    }
+
+    .data-table h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th {
+        font-size: 11px;
+        padding: 10px 8px;
+    }
+
+    td {
+        padding: 10px 8px;
+    }
+
+    .action-btn {
+        padding: 5px 8px;
+        font-size: 10px;
+        margin-right: 3px;
+    }
+
+    .chart-placeholder {
+        height: 200px;
+        padding: 20px 10px;
+    }
+
+    .chart-placeholder i {
+        font-size: 36px;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* ============================================
+   SCROLL BAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.3);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 215, 0, 0.5);
+}

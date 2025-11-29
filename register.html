@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - FinSight AI</title>
+  <link rel="stylesheet" href="assets/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    :root {
+      --finsight-primary: #00c851;
+      --finsight-secondary: #1a1a2e;
+      --finsight-accent-gold: #ffd700;
+      --finsight-text-primary: #ffffff;
+      --finsight-gradient: linear-gradient(135deg, #00c851 0%, #00a842 100%);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .auth-container {
+      background:rgba(26, 26, 46, 0.95);
+      border-radius:20px;
+      padding:40px;
+      width:100%;
+      max-width:450px;
+      box-shadow:0 20px 60px rgba(0, 200, 81, 0.1);
+      border:1px solid rgba(0, 200, 81, 0.2);
+    }
+    .logo { text-align:center; margin-bottom:30px; }
+    .logo i {
+      font-size:48px;
+      background:var(--finsight-gradient);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .logo h1 {
+      color:var(--finsight-text-primary);
+      font-size:28px;
+      margin-top:10px;
+    }
+    .form-group { margin-bottom:20px; }
+    .form-group label {
+      display:block;
+      color:rgba(255, 255, 255, 0.8);
+      margin-bottom:8px;
+      font-size:14px;
+    }
+    .form-control {
+      width:100%;
+      padding:12px 16px;
+      background:rgba(255, 255, 255, 0.05);
+      border:1px solid rgba(255, 255, 255, 0.1);
+      border-radius:10px;
+      color:white;
+      font-size:15px;
+      transition:all 0.3s ease;
+    }
+    .form-control:focus {
+      outline:none;
+      border-color:var(--finsight-primary);
+      background:rgba(255, 255, 255, 0.08);
+    }
+    .btn {
+      width:100%;
+      padding:14px;
+      background:var(--finsight-gradient);
+      border:none;
+      border-radius:10px;
+      color:white;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0, 200, 81, 0.3); }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; }
+    .links { text-align:center; margin-top:20px; }
+    .links a { color:var(--finsight-primary); text-decoration:none; font-size:14px; }
+    .links a:hover { text-decoration:underline; }
+    .error-message, .success-message {
+      border-radius:8px;
+      padding:12px;
+      font-size:14px;
+      margin-bottom:20px;
+      display:none;
+    }
+    .error-message {
+      background:rgba(255, 68, 68, 0.1);
+      border:1px solid rgba(255, 68, 68, 0.3);
+      color:#ff6b6b;
+    }
+    .success-message {
+      background:rgba(0, 200, 81, 0.1);
+      border:1px solid rgba(0, 200, 81, 0.3);
+      color:var(--finsight-primary);
+    }
+    .password-toggle { position:relative; }
+    .password-toggle i {
+      position:absolute;
+      right:15px;
+      top:50%;
+      transform:translateY(-50%);
+      color:rgba(255, 255, 255, 0.5);
+      cursor:pointer;
+    }
+    .password-strength { margin-top:8px; font-size:12px; }
+    .strength-bar {
+      height:4px;
+      background:rgba(255, 255, 255, 0.1);
+      border-radius:2px;
+      margin-top:5px;
+      overflow:hidden;
+    }
+    .strength-bar-fill {
+      height:100%;
+      width:0%;
+      transition:all 0.3s ease;
+    }
+    .strength-weak { background:#ff6b6b; width:33%; }
+    .strength-medium { background:#ffd700; width:66%; }
+    .strength-strong { background:#00c851; width:100%; }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="logo">
+      <i class="fas fa-chart-line"></i>
+      <h1>FinSight AI</h1>
+      <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-top: 5px;">
+        Create Your Account
+      </p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="your.email@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-toggle">
+          <input type="password" id="password" class="form-control" placeholder="Create a strong password" required>
+          <i class="fas fa-eye" id="togglePassword"></i>
+        </div>
+        <div class="password-strength">
+          <div class="strength-bar">
+            <div class="strength-bar-fill" id="strengthBar"></div>
+          </div>
+          <span id="strengthText" style="color: rgba(255, 255, 255, 0.5);"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-toggle">
+          <input type="password" id="confirmPassword" class="form-control" placeholder="Re-enter your password" required>
+          <i class="fas fa-eye" id="toggleConfirmPassword"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="registerBtn">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+    </form>
+
+    <div class="links">
+      <p style="color: rgba(255, 255, 255, 0.6); margin-top: 20px;">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Firebase v12 modular -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAi0jDVcNjzgTuRTInF1vlIUrOUX3DUKjQ",
+      authDomain: "faif-54aa9.firebaseapp.com",
+      projectId: "faif-54aa9",
+      storageBucket: "faif-54aa9.firebasestorage.app",
+      messagingSenderId: "624594089302",
+      appId: "1:624594089302:web:6fb75ad5d5a59c91b9d2f7",
+      measurementId: "G-WDZ8QRNFG8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // Password visibility toggles
+    document.getElementById('togglePassword').addEventListener('click', () => {
+      togglePasswordVisibility('password', 'togglePassword');
+    });
+    document.getElementById('toggleConfirmPassword').addEventListener('click', () => {
+      togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
+    });
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon  = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Password strength checker
+    document.getElementById('password').addEventListener('input', function () {
+      const password = this.value;
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthText = document.getElementById('strengthText');
+
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+      if (password.match(/[0-9]/)) strength++;
+      if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+      strengthBar.className = 'strength-bar-fill';
+
+      if (strength <= 1) {
+        strengthBar.classList.add('strength-weak');
+        strengthText.textContent = 'Weak password';
+        strengthText.style.color = '#ff6b6b';
+      } else if (strength <= 3) {
+        strengthBar.classList.add('strength-medium');
+        strengthText.textContent = 'Medium password';
+        strengthText.style.color = '#ffd700';
+      } else {
+        strengthBar.classList.add('strength-strong');
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = '#00c851';
+      }
+    });
+
+    // Register Form submit
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const registerBtn = document.getElementById('registerBtn');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+
+      errorMessage.style.display = 'none';
+      successMessage.style.display = 'none';
+
+      if (password !== confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match!';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMessage.textContent = 'Password must be at least 6 characters long!';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+      try {
+  console.log('Starting registration');
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  console.log('User created in Auth:', cred.user.uid);
+
+  const user = cred.user;
+
+  await updateProfile(user, { displayName: name });
+  console.log('Profile updated');7
+
+  await setDoc(doc(db, 'users', user.uid), {
+    name,
+    email,
+    role: 'user',
+    createdAt: serverTimestamp(),
+    analysisCount: 0,
+    lastLogin: serverTimestamp()
+  });
+  console.log('Firestore doc written');
+
+  successMessage.textContent = 'Account created successfully! Redirecting to login...';
+  successMessage.style.display = 'block';
+
+  setTimeout(() => {
+    window.location.href = 'login.html';
+  }, 2000);
+
+} catch (error) {
+  console.error('Registration error FULL:', error);
+  errorMessage.textContent = mapRegisterError(error.code || error.message);
+  errorMessage.style.display = 'block';
+
+  registerBtn.disabled = false;
+  registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+}
+    });
+
+    function mapRegisterError(code) {
+      switch (code) {
+        case 'auth/email-already-in-use':
+          return 'This email is already registered. Please login.';
+        case 'auth/invalid-email':
+          return 'Invalid email address.';
+        case 'auth/weak-password':
+          return 'Password is too weak. Use at least 6 characters.';
+        default:
+          return 'Registration failed. Please try again.';
+      }
+    }
+  </script>
+</body>
+</html>

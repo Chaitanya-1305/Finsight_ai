@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinSight AI - AI-Powered Financial Intelligence</title>
+
+  <!-- Assets -->
+  <link rel="stylesheet" href="assets/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* Auth buttons in navbar */
+    .auth-section {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .auth-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .login-btn {
+      background: rgba(0, 200, 81, 0.1);
+      color: #00c851;
+      border-color: rgba(0, 200, 81, 0.3);
+    }
+    .login-btn:hover {
+      background: rgba(0, 200, 81, 0.2);
+      color: #ffd700;
+    }
+    .register-btn {
+      background: linear-gradient(135deg, #00c851 0%, #00a842 100%);
+      color: #ffffff;
+    }
+    .register-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 200, 81, 0.3);
+    }
+    @media (max-width: 768px) {
+      .auth-section { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Page -->
+  <section id="landing" class="landing-page">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <i class="fas fa-chart-line brand-icon"></i>
+        <span class="brand-text">FinSight AI</span>
+      </div>
+      <div class="nav-menu auth-section">
+        <!-- Replaced by JS after login -->
+        <a href="login.html" class="auth-btn login-btn">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="register.html" class="auth-btn register-btn">
+          <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+      </div>
+    </nav>
+
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="gradient-text">AI-Powered</span><br>
+          Financial Intelligence
+        </h1>
+        <p class="hero-subtitle">
+          Transform your financial documents into actionable insights with cutting-edge AI analysis.
+          Get comprehensive reports, risk assessment, and strategic recommendations in seconds.
+        </p>
+
+        <!-- File Upload Section -->
+        <div class="file-upload-container">
+          <!-- Hidden real input -->
+          <input type="file" id="fileInput" accept=".pdf,application/pdf"
+                 style="position:absolute; left:-9999px; opacity:0; width:1px; height:1px;">
+
+          <!-- Visual drop / click area -->
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-content" id="uploadContent">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <h3>Drop your financial documents here</h3>
+              <p><strong>Or click to browse files</strong></p>
+              <div class="supported-formats">
+                <span class="format-tag">PDF Only</span>
+                <span class="format-tag">Max 50MB</span>
+                <span class="format-tag">Annual Reports</span>
+                <span class="format-tag">Financial Statements</span>
+              </div>
+            </div>
+
+            <div class="file-selected" id="fileSelected" style="display:none;">
+              <div class="file-info">
+                <i class="fas fa-file-pdf file-icon"></i>
+                <div class="file-details">
+                  <div class="file-name" id="fileName">No file selected</div>
+                  <div class="file-size" id="fileSize">0 MB</div>
+                </div>
+                <button class="remove-file" id="removeFile" type="button">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analyze -->
+          <button class="btn btn--primary btn--lg analyze-btn"
+                  id="analyzeBtn" type="button" disabled
+                  style="opacity:0.6; cursor:not-allowed;">
+            <i class="fas fa-brain"></i>
+            <span id="analyzeText">Select a file to analyze</span>
+          </button>
+
+          <!-- Demo -->
+          <button class="btn btn--outline btn--lg demo-btn" id="demoBtn" type="button">
+            <i class="fas fa-play"></i>
+            Try Demo (No File Required)
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-features">
+        <div class="feature-card">
+          <i class="fas fa-robot feature-icon"></i>
+          <h4>AI Analysis</h4>
+          <p>Advanced machine learning algorithms analyze your financial data</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-shield-alt feature-icon"></i>
+          <h4>Risk Assessment</h4>
+          <p>Identify potential risks and compliance issues automatically</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-chart-bar feature-icon"></i>
+          <h4>Visual Insights</h4>
+          <p>Interactive dashboards and comprehensive reporting</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading Screen -->
+  <section id="loading" class="loading-screen hidden">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <h2>Analyzing Your Document</h2>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Processing Document...</div>
+      <div class="loading-steps">
+        <div class="step active" id="step1">
+          <i class="fas fa-file-upload"></i>
+          <span>Processing Document</span>
+        </div>
+        <div class="step" id="step2">
+          <i class="fas fa-brain"></i>
+          <span>AI Analysis</span>
+        </div>
+        <div class="step" id="step3">
+          <i class="fas fa-chart-line"></i>
+          <span>Generating Insights</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="dashboard hidden">
+    <nav class="dashboard-nav">
+      <div class="nav-brand">
+        <i class="fas fa-chart-line brand-icon"></i>
+        <span class="brand-text">FinSight AI</span>
+        <button class="btn btn--outline btn--sm" id="newAnalysis" type="button">
+          <i class="fas fa-plus"></i> New Analysis
+        </button>
+      </div>
+      <div class="nav-sections">
+        <a href="#kpi-section" class="nav-section active">KPIs</a>
+        <a href="#tables-section" class="nav-section">Financial Data</a>
+        <a href="#risk-section" class="nav-section">Risk Analysis</a>
+        <a href="#sentiment-section" class="nav-section">Sentiment</a>
+        <a href="#audit-section" class="nav-section">Audit Opinion</a>
+      </div>
+    </nav>
+
+    <div class="dashboard-content">
+      <!-- KPI Dashboard -->
+      <div id="kpi-section" class="section">
+        <div class="section-header">
+          <h2>Key Performance Indicators</h2>
+          <p>Overview of your financial health and performance metrics</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card revenue-card">
+            <div class="kpi-header">
+              <h3>Revenue</h3>
+              <i class="fas fa-dollar-sign kpi-icon"></i>
+            </div>
+            <div class="kpi-value">$2.50B</div>
+            <div class="kpi-change positive">
+              <i class="fas fa-arrow-up"></i> +13.64%
+            </div>
+          </div>
+
+          <div class="kpi-card profit-card">
+            <div class="kpi-header">
+              <h3>Net Profit</h3>
+              <i class="fas fa-chart-line kpi-icon"></i>
+            </div>
+            <div class="kpi-value">$180M</div>
+            <div class="kpi-change positive">
+              <i class="fas fa-arrow-up"></i> +89.47%
+            </div>
+          </div>
+
+          <div class="kpi-card eps-card">
+            <div class="kpi-header">
+              <h3>EPS</h3>
+              <i class="fas fa-coins kpi-icon"></i>
+            </div>
+            <div class="kpi-value">$3.45</div>
+            <div class="kpi-change positive">
+              <i class="fas fa-arrow-up"></i> Strong
+            </div>
+          </div>
+
+          <div class="kpi-card roe-card">
+            <div class="kpi-header">
+              <h3>ROE</h3>
+              <i class="fas fa-percentage kpi-icon"></i>
+            </div>
+            <div class="kpi-value">15.2%</div>
+            <div class="kpi-change positive">
+              <i class="fas fa-arrow-up"></i> Excellent
+            </div>
+          </div>
+
+          <div class="kpi-card debt-card">
+            <div class="kpi-header">
+              <h3>Debt/Equity</h3>
+              <i class="fas fa-balance-scale kpi-icon"></i>
+            </div>
+            <div class="kpi-value">0.68</div>
+            <div class="kpi-change neutral">
+              <i class="fas fa-minus"></i> Healthy
+            </div>
+          </div>
+
+          <div class="kpi-card ratio-card">
+            <div class="kpi-header">
+              <h3>Current Ratio</h3>
+              <i class="fas fa-water kpi-icon"></i>
+            </div>
+            <div class="kpi-value">1.45</div>
+            <div class="kpi-change positive">
+              <i class="fas fa-arrow-up"></i> Strong
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-container" style="position:relative; height:400px;">
+            <h3>Revenue Growth Trend</h3>
+            <canvas id="revenueChart"></canvas>
+          </div>
+          <div class="chart-container" style="position:relative; height:400px;">
+            <h3>Profitability Metrics</h3>
+            <canvas id="profitChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Tables -->
+      <div id="tables-section" class="section">
+        <div class="section-header">
+          <h2>Financial Performance</h2>
+          <p>Detailed breakdown of financial statements and year-over-year analysis</p>
+        </div>
+
+        <div class="table-container">
+          <table class="financial-table" id="financialTable">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Current Year</th>
+                <th>Previous Year</th>
+                <th>Growth Rate</th>
+                <th>Performance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Revenue</strong></td>
+                <td>$2.50B</td>
+                <td>$2.20B</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 13.6%</span></td>
+                <td><span class="performance-indicator good"><i class="fas fa-arrow-up"></i> Good</span></td>
+              </tr>
+              <tr>
+                <td><strong>Cost of Goods Sold</strong></td>
+                <td>$1.80B</td>
+                <td>$1.65B</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 9.1%</span></td>
+                <td><span class="performance-indicator average"><i class="fas fa-minus"></i> Average</span></td>
+              </tr>
+              <tr>
+                <td><strong>Gross Profit</strong></td>
+                <td>$700M</td>
+                <td>$550M</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 27.3%</span></td>
+                <td><span class="performance-indicator good"><i class="fas fa-arrow-up"></i> Good</span></td>
+              </tr>
+              <tr>
+                <td><strong>Operating Expenses</strong></td>
+                <td>$450M</td>
+                <td>$420M</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 7.1%</span></td>
+                <td><span class="performance-indicator average"><i class="fas fa-minus"></i> Average</span></td>
+              </tr>
+              <tr>
+                <td><strong>Operating Income</strong></td>
+                <td>$250M</td>
+                <td>$130M</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 92.3%</span></td>
+                <td><span class="performance-indicator excellent"><i class="fas fa-rocket"></i> Excellent</span></td>
+              </tr>
+              <tr>
+                <td><strong>Net Income</strong></td>
+                <td>$180M</td>
+                <td>$95M</td>
+                <td><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 89.5%</span></td>
+                <td><span class="performance-indicator excellent"><i class="fas fa-rocket"></i> Excellent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Risk Analysis -->
+      <div id="risk-section" class="section">
+        <div class="section-header">
+          <h2>Risk Analysis</h2>
+          <p>AI-identified risks and their potential impact on your business</p>
+        </div>
+
+        <div class="risk-overview">
+          <div class="risk-summary">
+            <div class="risk-stat high-risk">
+              <h3>1</h3><p>High Risk</p>
+            </div>
+            <div class="risk-stat medium-risk">
+              <h3>2</h3><p>Medium Risk</p>
+            </div>
+            <div class="risk-stat low-risk">
+              <h3>0</h3><p>Low Risk</p>
+            </div>
+          </div>
+          <div class="risk-chart-container" style="position:relative; height:320px;">
+            <canvas id="riskChart"></canvas>
+          </div>
+        </div>
+
+        <div class="risk-items" id="riskItems">
+          <div class="risk-item high">
+            <div class="risk-header">
+              <span class="risk-category">Regulatory Risk</span>
+              <span class="confidence-badge">87% Confidence</span>
+            </div>
+            <p style="color:var(--finsight-text-primary); margin:12px 0;">
+              The company faces significant regulatory challenges in emerging markets
+            </p>
+            <div class="risk-severity">
+              <span class="severity-badge high-risk">High Risk</span>
+            </div>
+          </div>
+          <div class="risk-item medium">
+            <div class="risk-header">
+              <span class="risk-category">Market Risk</span>
+              <span class="confidence-badge">92% Confidence</span>
+            </div>
+            <p style="color:var(--finsight-text-primary); margin:12px 0;">
+              Increased competition may impact market share and pricing power
+            </p>
+            <div class="risk-severity">
+              <span class="severity-badge medium-risk">Medium Risk</span>
+            </div>
+          </div>
+          <div class="risk-item medium">
+            <div class="risk-header">
+              <span class="risk-category">Financial Risk</span>
+              <span class="confidence-badge">78% Confidence</span>
+            </div>
+            <p style="color:var(--finsight-text-primary); margin:12px 0;">
+              Currency fluctuations could affect international revenue streams
+            </p>
+            <div class="risk-severity">
+              <span class="severity-badge medium-risk">Medium Risk</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sentiment Analysis -->
+      <div id="sentiment-section" class="section">
+        <div class="section-header">
+          <h2>Sentiment Analysis</h2>
+          <p>AI analysis of management tone and communication sentiment</p>
+        </div>
+
+        <div class="sentiment-overview">
+          <div class="sentiment-gauge">
+            <h3>Overall Sentiment</h3>
+            <div class="gauge-container" style="position:relative; height:320px;">
+              <canvas id="sentimentGauge"></canvas>
+            </div>
+            <div class="gauge-label">Optimistic</div>
+            <div class="confidence-score">Confidence: <span class="score">84%</span></div>
+          </div>
+
+          <div class="sentiment-themes">
+            <h3>Key Themes</h3>
+            <div class="theme-tags">
+              <span class="theme-tag growth">Growth</span>
+              <span class="theme-tag innovation">Innovation</span>
+              <span class="theme-tag expansion">Market Expansion</span>
+              <span class="theme-tag excellence">Operational Excellence</span>
+            </div>
+
+            <div style="margin-top:24px;">
+              <h4 style="color:var(--finsight-text-primary); margin-bottom:16px;">Sentiment Breakdown</h4>
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:var(--finsight-text-secondary);">CEO Letter Sentiment:</span>
+                  <span style="color:var(--finsight-success); font-weight:600;">Positive</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:var(--finsight-text-secondary);">Overall Tone:</span>
+                  <span style="color:var(--finsight-success); font-weight:600;">Optimistic</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:var(--finsight-text-secondary);">Market Outlook:</span>
+                  <span style="color:var(--finsight-accent-gold); font-weight:600;">Confident</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Opinion -->
+      <div id="audit-section" class="section">
+        <div class="section-header">
+          <h2>Audit Opinion</h2>
+          <p>AI analysis of audit findings and compliance status</p>
+        </div>
+
+        <div class="audit-result">
+          <div class="audit-status clean">
+            <i class="fas fa-check-circle audit-icon"></i>
+            <h3>Clean Opinion</h3>
+            <div class="confidence-bar">
+              <div class="confidence-fill" style="width:91%;"></div>
+            </div>
+            <p>Confidence: <strong>91%</strong></p>
+
+            <div style="margin-top:24px; text-align:left;">
+              <h4 style="color:var(--finsight-text-primary); margin-bottom:12px;">Classification Details</h4>
+              <p style="color:var(--finsight-text-secondary); font-size:14px;">
+                The audit opinion has been classified as Clean based on comprehensive AI analysis
+                of audit documentation, management responses, and compliance indicators.
+              </p>
+            </div>
+          </div>
+
+          <div class="audit-findings">
+            <h4>Key Findings</h4>
+            <div class="finding-item">
+              <i class="fas fa-shield-check"></i>
+              <span>No material weaknesses identified in internal controls</span>
+            </div>
+            <div class="finding-item">
+              <i class="fas fa-check"></i>
+              <span>All regulatory compliance requirements met</span>
+            </div>
+            <div class="finding-item">
+              <i class="fas fa-chart-line"></i>
+              <span>Financial statements present fairly in all material respects</span>
+            </div>
+            <div class="finding-item">
+              <i class="fas fa-balance-scale"></i>
+              <span>Adequate disclosure of accounting policies and estimates</span>
+            </div>
+            <div class="finding-item">
+              <i class="fas fa-user-check"></i>
+              <span>Management integrity and competence confirmed</span>
+            </div>
+
+            <div style="margin-top:20px; padding:16px; background:rgba(0,200,81,0.1); border-radius:8px; border-left:4px solid var(--finsight-success);">
+              <h5 style="color:var(--finsight-success); margin-bottom:8px;">
+                <i class="fas fa-thumbs-up" style="margin-right:8px;"></i>
+                Overall Assessment
+              </h5>
+              <p style="color:var(--finsight-text-primary); font-size:14px; margin:0;">
+                The financial statements and internal controls demonstrate strong governance
+                and compliance standards with no significant deficiencies identified.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // TODO: put your real values here or remove Firebase from index if you don't need auto-login.
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) return;
+      try {
+        const snap = await db.collection('users').doc(user.uid).get();
+        if (!snap.exists) return;
+        const data = snap.data();
+        sessionStorage.setItem('user', JSON.stringify({
+          uid: user.uid, email: user.email, name: data.name, role: data.role
+        }));
+        if (data.role === 'admin') {
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          showLoggedInView();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    function showLoggedInView() {
+      const navMenu = document.querySelector('.nav-menu');
+      if (!navMenu) return;
+      navMenu.innerHTML = `
+        <a href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+        <a href="history.html"><i class="fas fa-history"></i> History</a>
+        <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      `;
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        sessionStorage.removeItem('user');
+        location.reload();
+      });
+    }
+
+    window.addEventListener('load', () => {
+      const userData = sessionStorage.getItem('user');
+      if (!userData) return;
+      const user = JSON.parse(userData);
+      if (user.role !== 'admin') {
+        showLoggedInView();
+      }
+    });
+  </script>
+
+  <!-- Front-end analyze flow (from original app.js, simplified) -->
+  <script>
+    const fileInput    = document.getElementById('fileInput');
+    const uploadArea   = document.getElementById('uploadArea');
+    const fileSelected = document.getElementById('fileSelected');
+    const fileNameEl   = document.getElementById('fileName');
+    const fileSizeEl   = document.getElementById('fileSize');
+    const removeFile   = document.getElementById('removeFile');
+    const analyzeBtn   = document.getElementById('analyzeBtn');
+    const analyzeText  = document.getElementById('analyzeText');
+    const demoBtn      = document.getElementById('demoBtn');
+
+    const landing  = document.getElementById('landing');
+    const loading  = document.getElementById('loading');
+    const dashboard= document.getElementById('dashboard');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+
+    function bytesToMB(bytes) {
+      return (bytes / (1024 * 1024)).toFixed(2);
+    }
+
+    function setActiveStep(step) {
+      [step1, step2, step3].forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+    }
+
+    function enableAnalyzeButton() {
+      analyzeBtn.disabled = false;
+      analyzeBtn.style.opacity = '1';
+      analyzeBtn.style.cursor = 'pointer';
+      analyzeText.textContent = 'Analyze Document';
+    }
+
+    function disableAnalyzeButton() {
+      analyzeBtn.disabled = true;
+      analyzeBtn.style.opacity = '0.6';
+      analyzeBtn.style.cursor = 'not-allowed';
+      analyzeText.textContent = 'Select a file to analyze';
+    }
+
+    function handleFile(file) {
+      if (!file || file.type !== 'application/pdf') {
+        alert('Please upload a PDF file.');
+        return;
+      }
+      fileNameEl.textContent = file.name;
+      fileSizeEl.textContent = `${bytesToMB(file.size)} MB`;
+      uploadArea.classList.add('file-added');
+      fileSelected.style.display = 'block';
+      enableAnalyzeButton();
+    }
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+    uploadArea.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      handleFile(file);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      handleFile(file);
+    });
+
+    removeFile.addEventListener('click', () => {
+      fileInput.value = '';
+      fileSelected.style.display = 'none';
+      uploadArea.classList.remove('file-added');
+      disableAnalyzeButton();
+    });
+
+    function startFakeAnalysis() {
+      landing.classList.add('hidden');
+      loading.classList.remove('hidden');
+      dashboard.classList.add('hidden');
+
+      let progress = 0;
+      progressFill.style.width = '0%';
+      progressText.textContent = 'Processing Document...';
+      setActiveStep(step1);
+
+      const interval = setInterval(() => {
+        progress += 5;
+        if (progress <= 30) {
+          progressText.textContent = 'Processing Document...';
+          setActiveStep(step1);
+        } else if (progress <= 70) {
+          progressText.textContent = 'Running AI Analysis...';
+          setActiveStep(step2);
+        } else if (progress < 100) {
+          progressText.textContent = 'Generating Insights...';
+          setActiveStep(step3);
+        }
+        progressFill.style.width = `${progress}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            loading.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            initCharts();
+          }, 300);
+        }
+      }, 120);
+    }
+
+    analyzeBtn.addEventListener('click', () => {
+      if (analyzeBtn.disabled) return;
+      startFakeAnalysis();
+    });
+
+    demoBtn.addEventListener('click', () => {
+      disableAnalyzeButton();
+      fileInput.value = '';
+      fileSelected.style.display = 'none';
+      uploadArea.classList.remove('file-added');
+      startFakeAnalysis();
+    });
+
+    document.getElementById('newAnalysis').addEventListener('click', () => {
+      dashboard.classList.add('hidden');
+      loading.classList.add('hidden');
+      landing.classList.remove('hidden');
+      disableAnalyzeButton();
+      fileInput.value = '';
+      fileSelected.style.display = 'none';
+      uploadArea.classList.remove('file-added');
+    });
+
+    function initCharts() {
+  // Revenue chart - LINE CHART
+  const revenueCtx = document.getElementById('revenueChart');
+  if (revenueCtx) {
+    new Chart(revenueCtx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['2019', '2020', '2021', '2022', '2023'],
+        datasets: [{
+          label: 'Revenue ($B)',
+          data: [1.6, 1.9, 2.1, 2.2, 2.5],
+          borderColor: '#00c851',
+          backgroundColor: 'rgba(0,200,81,0.15)',
+          tension: 0.3,
+          fill: true,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            ticks: { callback: function(v) { return v + 'B'; } },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
+      }
+    });
+  }
+
+  // Profit chart - STACKED BAR
+  const profitCtx = document.getElementById('profitChart');
+  if (profitCtx) {
+    new Chart(profitCtx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['2019', '2020', '2021', '2022', '2023'],
+        datasets: [
+          {
+            label: 'Net Profit ($M)',
+            data: [70, 85, 110, 95, 180],
+            backgroundColor: 'rgba(0,200,81,0.8)'
+          },
+          {
+            label: 'Operating Income ($M)',
+            data: [120, 130, 160, 130, 250],
+            backgroundColor: 'rgba(255,215,0,0.8)'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            ticks: { callback: function(v) { return v + 'M'; } },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
+      }
+    });
+  }
+
+  // Risk PIE chart
+  // Risk DOUGHNUT
+const riskCtx = document.getElementById('riskChart');
+if (riskCtx) {
+  riskCtx.width = 400;   // increase canvas size
+  riskCtx.height = 400;
+
+  new Chart(riskCtx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['High', 'Medium', 'Low'],
+      datasets: [{
+        data: [1, 2, 0],
+        backgroundColor: ['#ff4b5c', '#ffdd57', '#00e676'], // brighter
+        borderColor: '#ffffff',
+        borderWidth: 4,          // thick white border like reference UI
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false, // allow bigger height
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#d1d5db',
+            boxWidth: 24
+          }
+        }
+      },
+      cutout: '68%'              // thinner ring -> visually larger chart
+    }
+  });
+}
+
+// Sentiment GAUGE (doughnut)
+const sentimentCtx = document.getElementById('sentimentGauge');
+if (sentimentCtx) {
+  sentimentCtx.width = 400;
+  sentimentCtx.height = 400;
+
+  new Chart(sentimentCtx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Positive', 'Neutral', 'Negative'],
+      datasets: [{
+        data: [70, 20, 10],
+        backgroundColor: ['#00e676', '#ffdd57', '#ff4b5c'],
+        borderColor: '#ffffff',
+        borderWidth: 4,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#d1d5db',
+            boxWidth: 24
+          }
+        }
+      },
+      cutout: '72%'              // gauge‑style thin ring
+    }
+  });
+}
+}
+  </script>
+</body>
+</html>
